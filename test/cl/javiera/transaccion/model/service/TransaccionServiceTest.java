@@ -2,12 +2,16 @@ package cl.javiera.transaccion.model.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +32,7 @@ class TransaccionServiceTest {
 		transaccionDao=mock(TransaccionDAO.class);
 		transaccionService= new TransaccionServiceImpl(transaccionDao);
 	
-		//when(transaccionDao.guardar(any(Transaccion.class))).thenReturn(true);
+		when(transaccionDao.guardar(any(Transaccion.class))).thenReturn(1);
 	}
 
 	@Test
@@ -50,6 +54,18 @@ class TransaccionServiceTest {
 		
 		assertFalse(resultado);
 		verify(transaccionDao, never()).guardar(any(Transaccion.class));
+	}
+	
+	@Test
+	void testGetListado() throws SQLException {
+		List<Transaccion> listado = new ArrayList<>();
+		listado.add(new Transaccion());
+		when(transaccionDao.getListado(anyInt())).thenReturn(listado);
+		
+		List<Transaccion> listadoObtenido = transaccionService.getListado();
+		
+		assertFalse(listadoObtenido.isEmpty());
+		assertEquals(1, listadoObtenido.size());
 	}
 
 }
